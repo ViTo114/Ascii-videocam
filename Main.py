@@ -18,6 +18,12 @@ while True:
         print("Il programma non riece a ricevere i frame dalla camnera")
         break
 
+    # Questa istruzioni applica il filtro bianco e nero al frame catturato
+    frame = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+
+    # Quseta istruzioni applica il saturamento dell'immagine
+    frame = cv.adaptiveThreshold(frame, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, 9,2)
+
     # La stringa indica il nome della finestra che verrà creata
     cv.imshow("camera", frame)
 
