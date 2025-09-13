@@ -1,4 +1,51 @@
 import cv2 as cv
+import numpy as np
+import os
+
+
+
+# Funzione per associare un carattere ascii ad ogni livello di intensità
+def intensita2Ascii (intensita):
+    carattere = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. "
+
+    # Calcola l'indice in base all'intensità
+    if intensita <= 183:
+        indice = intensita // 4
+    else:
+        indice = 46 + (intensita - 184) // 3
+
+    return carattere[indice]
+
+
+# Funzione per trasformare il frame in una matrice numpy di caratteri
+def frame2AsciiFrame (frame):
+    dimensioni = frame.shape
+
+    asciiFrame = np.empty(dimensioni, dtype='U1')
+
+    for riga in range(dimensioni[0]):
+        for colonna in range(dimensioni[1]):
+            asciiFrame[riga, colonna] = intensita2Ascii(frame[riga, colonna])
+
+    return asciiFrame
+
+
+def printAsciiFrame(asciFrame):
+    os.system("clear")
+
+    immagine = ""
+
+    dimensioni = asciFrame.shape
+
+    for riga in range(dimensioni[0]):
+        immagine = immagine + "\n"
+        for colonna in range(dimensioni[1]):
+            immagine = immagine + asciFrame[riga, colonna]
+
+    print(immagine)
+
+
+
 
 # il paramentro 0 rappresenta la camere di default del pc
 camera = cv.VideoCapture(0)
@@ -18,19 +65,15 @@ while True:
         print("Il programma non riece a ricevere i frame dalla camnera")
         break
 
+    frame = cv.resize(frame, (300, 100))
+
     # Questa istruzioni applica il filtro bianco e nero al frame catturato
     frame = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
 
-    # Quseta istruzioni applica il saturamento dell'immagine
-    frame = cv.adaptiveThreshold(frame, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, 9,2)
+    asciiFrame = frame2AsciiFrame(frame)
 
-    # La stringa indica il nome della finestra che verrà creata
-    cv.imshow("camera", frame)
+    printAsciiFrame(asciiFrame)
 
-    # Con questa istruzioni specifichiamo che il programma si deve arrestare per un 1 millisecondo
-    # per controllare se ho premuto il tasto q
-    if cv.waitKey(1) == ord('q'):
-        break
 
 camera.release()
 cv.destroyAllWindows()
