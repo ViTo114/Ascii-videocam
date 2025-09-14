@@ -6,13 +6,9 @@ import os
 
 # Funzione per associare un carattere ascii ad ogni livello di intensità
 def intensita2Ascii (intensita):
-    carattere = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. "
+    carattere = " +I%$@"
 
-    # Calcola l'indice in base all'intensità
-    if intensita <= 183:
-        indice = intensita // 4
-    else:
-        indice = 46 + (intensita - 184) // 3
+    indice = intensita // 43
 
     return carattere[indice]
 
@@ -76,4 +72,3 @@ while True:
 
 
 camera.release()
-cv.destroyAllWindows()
